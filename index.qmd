@@ -1,0 +1,386 @@
+---
+title: "Présentation cerisedoc"
+subtitle: "Outil documentaire sous Cerise"
+author: "SSP/DEMESIS"
+date: today
+
+format:
+  revealjs:
+    transition: slide
+    chalkboard: false
+    slide-number: true
+    fig-cap-location: bottom
+    date-format: "DD/MM/YYYY"
+
+execute:
+  echo: false
+  warning: false
+  cache: false
+
+editor:
+  render-on-save: true
+  markdown:
+    wrap: 72
+---
+
+## Origine du projet
+
+**Besoin exprimé lors du diagnostic des pôles Études et Diffusion**
+
+<br>
+
+Documentation hétérogène ou insuffisante des sources de données  
+
+- Faciliter l’**appropriation** des sources  
+- Améliorer la **traçabilité** des données  
+- Obtenir un **aperçu** des données avant habilitation  
+
+## Installation depuis GitLab
+
+```{.r}
+# Installation du package
+install.packages("remotes")
+
+remotes::install_git(
+  "https://gitlab.forge.agriculture.rie.gouv.fr/ssp/bmis/packages/cerisedoc",
+  dependencies = TRUE,
+  git = "external"
+)
+```
+
+<br>
+
+💡 **Si package adopté** : installation systématique sur Cerise pour éviter
+les installations individuelles
+
+## Lancement de l'application
+
+::: {.columns}
+
+::: {.column width="50%"}
+### Via code R
+
+```{.r}
+library(cerisedoc)
+affiche_documentation()
+```
+:::
+
+::: {.column width="50%"}
+### Via addin RStudio
+
+- Menu **Addins** dans RStudio  
+- Cliquer sur **"Afficher documentation"**  
+- L'application s'ouvre dans le navigateur  
+:::
+
+:::
+
+## Formats supportés {.smaller}
+
+::: {.columns}
+
+::: {.column width="33%"}
+### CSV
+- Détection automatique de l’encodage  
+- Choix du délimiteur (`;`, `,`, `|`)  
+- Pour les fichiers volumineux, seules les **10 000 premières lignes** sont lues  
+:::
+
+::: {.column width="33%"}
+### RDS
+- Format R natif  
+- Pas de possibilité de lire une partie des lignes  
+- Les fichiers de plus de **100 Mo sont ignorés**  
+:::
+
+::: {.column width="33%"}
+### PARQUET
+- Format Apache Arrow  
+- Pour les fichiers volumineux, seules les **10 000 premières lignes** sont lues  
+:::
+
+:::
+
+## Ce qui est documenté {.smaller}
+
+Pour chaque fichier, la documentation contient :
+
+::: {.columns}
+
+::: {.column width="50%"}
+**Structure**
+
+- 📊 Nombre de lignes et de colonnes  
+- 🏷️ Noms des variables  
+- 🔤 Types de données  
+- 💾 Taille du fichier  
+:::
+
+::: {.column width="50%"}
+**Contenu**
+
+- 📈 Statistiques descriptives  
+- 🔢 Valeurs manquantes  
+- 🎯 Valeurs uniques  
+- 📅 Date de dernière modification  
+:::
+
+:::
+
+<br>
+
+💡 Documentation au format **HTML** consultable indépendamment via
+l’explorateur de fichiers Cerise
+
+## Historique des versions
+
+Un historique de la documentation est géré par **cerisedoc**.  
+Les fichiers HTML sont stockés dans les répertoires `archive_doc` sous :
+
+```
+/var/data/nfs/CERISE/01-Espace-de-Partage/SSP/BMIS/cerisedocumentation/
+```
+
+![](img/historique_versions.png)
+
+## README
+
+S'il existe, cerisedoc affiche le contenu d'un fichier **README** ou
+**LISEZMOI** (formats `md` ou `txt`).
+
+![](img/readme.png)
+
+## Processus automatisé
+
+```
+┌─────────────────────────────────────────┐
+│  Ordonnancement quotidien (ordobatchr)  │
+└──────────────┬──────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────┐
+│  Vérification des modifications         │
+│  (via attribut de date)                 │
+└──────────────┬──────────────────────────┘
+               │
+          ┌────┴────┐
+          │ Modifié?│
+          └────┬────┘
+          Non  │  Oui
+```
+```
+          │    │
+          │    ▼
+          │  ┌─────────────────────┐
+          │  │ Génération HTML      │
+          │  └─────────┬───────────┘
+          │            │
+          │            ▼
+          │  ┌─────────────────────┐
+          │  │ Envoi notifications │
+          │  └─────────────────────┘
+          │            │
+          └────────────┘
+                 ⏭️ Fichier suivant
+```
+
+## Onglet "Navigation Fichiers"
+
+### Fonctionnalités
+
+::: {.columns}
+
+::: {.column width="50%"}
+- Parcours de l’arborescence  
+- Sélection de fichier HTML  
+- Affichage intégré dans l’application  
+- Détection automatique du projet  
+:::
+
+::: {.column width="50%"}
+![](img/navigation.png)
+:::
+
+:::
+
+## Onglet "Chemins à traiter"
+
+![](img/chemin_a_traiter.png)
+
+## Actions disponibles {.smaller}
+
+::: {.columns}
+
+::: {.column width="50%"}
+### ➕ Ajouter un chemin
+
+1. Cliquer sur "Choisir un répertoire"
+2. Naviguer dans l'arborescence
+3. (Optionnel) Indiquer le délimiteur CSV
+4. Cliquer sur "Ajouter"
+5. Enregistrement immédiat
+:::
+
+::: {.column width="50%"}
+### 🗑️ Supprimer un chemin
+
+- Sélectionner une ligne du tableau
+- Cliquer sur "Supprimer"
+- Confirmation de suppression
+
+### 🔄 Générer
+
+- Bouton sur chaque ligne
+- Lance la génération immédiate (pour ne pas attendre le lendemain par ex.)
+:::
+
+:::
+
+<br>
+
+⚠️ **Important** : Les chemins doivent être uniques
+
+## Onglet "Recherche Cerise"
+
+Recherche dans l'ensemble de l'arborescence Cerise
+
+**Périmètres couverts** :
+
+- `02-Espace-de-Production`
+- `03-Espace-de-Diffusion`
+- `01-Espace-de-Partage/SSP`
+- `01-Espace-de-Partage/SRISE`
+
+---
+
+## Options de recherche {.smaller}
+
+::: {.columns}
+
+::: {.column width="50%"}
+### 🔤 Sensible à la casse
+
+"Fichier.csv" ≠ "fichier.csv"
+
+### 📝 Expression régulière
+
+Quelques exemples :
+
+- `^test` => Fichiers commençant par "test"  
+- `^test.*\\.csv$` => Fichiers commençant par "test" et finissant par ".csv"  
+- `^.*\.parquet$` => Tous les fichiers parquet  
+
+### 📁 Répertoire spécifique
+
+Limite la recherche à un sous-répertoire pour cibler les résultats.
+:::
+
+::: {.column width="50%"}
+![](img/fenetre_recherche.png)
+:::
+
+:::
+
+## Résultats de recherche
+
+Pour chaque fichier trouvé :
+
+![](img/resultats_recherche.png)
+
+⚠️ Attention, pas de recherche possible en temps réel => si vous avez créé un fichier dans la journée et que vous le recherchez avec cerisedoc, il ne sera pas trouvé (car non indexé dans la BDD).
+
+## Abonnements
+
+Recevez **UN SEUL email** regroupant **toutes** les modifications de vos répertoires suivis
+
+<br>
+
+**Fonctionnalités**
+
+- Inscription/désinscription
+- Emails groupés par utilisateur
+- Détection des suppressions
+
+## Contenu d'un email groupé {.smaller}
+
+**Structure du message** :
+
+- 📊 **Résumé global** : nombre total de modifications
+- 📁 **Détails par répertoire** avec sections :
+  - ➕ Nouveaux fichiers (ajouts)
+  - 🔄 Fichiers modifiés
+  - 🗑️ Fichiers supprimé
+
+## Détection des suppressions
+
+### Principe
+
+CeriseDoc **suit** tous les fichiers documentés et **détecte** les suppressions
+
+::: {.columns}
+
+::: {.column width="50%"}
+**Mécanisme**
+
+- Table `fichiers_suivis` en BDD
+- Enregistrement à chaque traitement
+- Comparaison avec l'existant
+- Marquage des fichiers supprimés
+:::
+
+::: {.column width="50%"}
+**Dans l'email**
+
+- Section dédiée "Fichiers supprimés"
+- Liste des fichiers concernés
+- Par répertoire
+- Avec date de détection
+:::
+
+:::
+
+## 📧 Exemple d'email groupé {.smaller}
+
+```
+Objet : [CeriseDoc] Nouvelles documentations générées pour le(s) répertoire(s) suivant(s) :
+
+Bonjour,
+
+Les documentations suivantes ont été générées :
+
+- /root_cerise/01-Espace-de-Partage/SSP/BMIS/cerisedoc/inst/extdata
+- /root_cerise/01-Espace-de-Partage/SSP/BMIS/TestExport/test_cerisedoc
+
+Vous recevez cet email car vous êtes abonné à ces chemins ou à leurs sous-répertoires.
+
+Pour gérer vos abonnements, utilisez l'onglet 'Abonnement' dans l'application CeriseDoc.
+
+Cordialement,
+L'équipe CeriseDoc
+```
+
+
+## Organisation des fichiers HTML
+
+```
+cerisedocumentation/
+├── CERISE/
+│   ├── 02-Espace-de-Production/
+│   │   └── SSP/
+│   │       └── fichier1.html
+│   ├── 03-Espace-de-Diffusion/
+│   │   └── documentation.html
+│   └── 01-Espace-de-Partage/
+│       ├── SSP/
+│       └── SRISE/
+├── data/
+│   ├── chemins_a_traiter.csv
+│   └── abonnements.db
+└── lancement.R
+```
+
+## Quelques cas d'usage possibles
+
+- **En cas de script R non fonctionnel** : si un script R ne fonctionne plus, un 1er réflexe peut être de vérifier que le format des données en entrée n'ont pas été modifiés par les responsables de source (s'il est abonné à la source, l'agent aura reçu un mail).
+- **Avant une demande d'habilitation à une source** : un agent peut consulter le dictionnaire des variables d'un jeu de données pour s'assurer qu'il contient bien l'information dont l'agent a besoin.
