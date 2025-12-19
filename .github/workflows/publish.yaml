@@ -16,8 +16,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploiement et creation pdf
-    environment:
-      name: github-pages
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
