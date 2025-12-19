@@ -72,6 +72,8 @@ affiche_documentation()
 - Menu **Addins** dans RStudio  
 - Cliquer sur **"Afficher documentation"**  
 - L'application s'ouvre dans le navigateur  
+
+![](img/addin.png)
 :::
 
 :::
