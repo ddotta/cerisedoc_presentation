@@ -1,5 +1,6 @@
 project:
   title: "Présentation cerisedoc"
+  output-dir: _site
     
 format:
   masa-default-revealjs: default
