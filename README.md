@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![render](https://github.com/SSM-Agriculture/formation-R-initiation/actions/workflows/publish.yaml/badge.svg)](https://github.com/SSM-Agriculture/formation-R-initiation/actions)
+[![render](https://github.com/ddotta/cerisedoc_presentation/actions/workflows/publish.yaml/badge.svg)](https://github.com/ddotta/cerisedoc_presentation/actions)
 <!-- badges: end -->
 
 # Formation R initiation

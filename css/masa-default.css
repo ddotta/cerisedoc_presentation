@@ -66,14 +66,4 @@ pre.sourceCode > code {
   border-radius: 4px;
 }
 
-.reveal section.no-scale {
-  overflow: visible;
-}
-
-.reveal section.no-scale pre code {
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-
 
