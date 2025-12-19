@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - main
 
 permissions:
   contents: write
@@ -64,4 +64,4 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add diaporama_pdf/Diaporama_initiation.pdf
           git commit -m "MAJ de la version pdf"
-          git push origin master
+          git push origin main
